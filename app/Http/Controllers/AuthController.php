@@ -22,20 +22,27 @@ class AuthController extends Controller
         ]);
         $credentials = $request->only('username', 'password');
         $user = User::where('username', $credentials['username'])->first();
-        if($user->status == 'inactive'){
-            return redirect()->route('auth')->withErrors([
-                'username' => 'Akun ini tidak aktif',
-            ]);
-        }else{
-            if(Auth::attempt($credentials)){
-                $request->session()->regenerate();
-                return redirect()->route('dashboard');
-            }else{
+        if($user)
+        {
+            if($user->status == 'inactive'){
                 return redirect()->route('auth')->withErrors([
-                    'username' => 'The provided credentials do not match our records.',
+                    'username' => 'Akun ini tidak aktif',
                 ]);
+            }else{
+                if(Auth::attempt($credentials)){
+                    $request->session()->regenerate();
+                    return redirect()->route('dashboard');
+                }else{
+                    return redirect()->route('auth')->withErrors([
+                        'username' => 'The provided credentials do not match our records.',
+                    ]);
+                }
+    
             }
-
+        }else{
+            return redirect()->route('auth')->withErrors([
+                'username' => 'The provided credentials do not match our records.',
+            ]);
         }
    
     }
