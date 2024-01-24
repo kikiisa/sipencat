@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <h4>Selamat Datang, <strong>{{Auth::user()->name}}</strong></h4>
                     <hr>
-                    <h5>Total Semua Transaksi : Rp {{number_format($total,0,',','.')}}</h5>
+                    <h5>Total Semua Transaksi : Rp {{number_format($payToday,0,',','.')}}</h5>
                 </div>
             </div>
             <div class="row">

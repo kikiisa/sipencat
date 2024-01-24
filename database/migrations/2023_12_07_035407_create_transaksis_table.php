@@ -16,12 +16,9 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->string('name_transaksi');
-            $table->string('qty');
             $table->string('satuan');
-            $table->string('price_regis');
-            $table->string('price_uji');
-            $table->enum('status',['success','pending','failed']);
+            $table->string('volume kendaraan');
+            $table->string('total');
             $table->timestamps();
         });
     }

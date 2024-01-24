@@ -24,9 +24,7 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'status' => 'active',
             'password' => bcrypt('admin123'),
-
        ]);
-
        User::create([
             'uuid' => Uuid::uuid4()->toString(),
             'username' => 'user',
