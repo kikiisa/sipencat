@@ -78,44 +78,37 @@
                         <i data-feather="x"></i>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body"f>
                     <div class="modal-body">
                         <div class="row">
-                            <h6>Registrasi Kendaraan Baru</h6>
+                        
                             <div class="form-group col-lg-6 col-6">
                                 <label class="form-label">Satuan (KG)</label>
-                                <input type="text" onkeyup="return price1()"  placeholder="7.000 Kg" class="form-control satuan-1">
+                                <input type="text" onkeyup="return price()"  placeholder="7.000 Kg" class="form-control satuan-1">
                             </div>
                             <div class="form-group col-lg-6 col-6">
                                 <label class="form-label">Volume (Kendaraan)</label>
-                                <input type="text" onkeyup="return price1()" placeholder="Volume Kendaraan" class="form-control volume-1">
+                                <input type="text" onkeyup="return price()" placeholder="Volume Kendaraan" class="form-control volume-1">
                             </div>
 
                             <div class="form-group col-lg-6 col-6">
                                 <label class="form-label">Satuan (KG)</label>
-                                <input type="text" onkeyup="return price2()" placeholder="7.001 Kg Keatas" class="form-control satuan-2">
+                                <input type="text" onkeyup="return price()" placeholder="7.001 Kg Keatas" class="form-control satuan-2">
                             </div>
                             <div class="form-group col-lg-6 col-6">
                                 <label class="form-label">Volume (Kendaraan)</label>
-                                <input type="text" placeholder="Volume Kendaraan" class="form-control volume-2" onkeyup="return price2()">
+                                <input type="text" placeholder="Volume Kendaraan" class="form-control volume-2" onkeyup="return price()">
                             </div>
-
                         </div>
-                        {{-- <p class="fw-bold">Biaya Uji</p>
-                        <hr>
-                        <p>JBB 0 - 7.000 < Kg : Rp <strong>Rp 150.000.00 x Volume (Kendaraan)</strong></p>
-                        <p>JBB 0 - 7.001 > <strong>Rp 250.000.00 x Volume(Kendaraan)</strong></p>
-                        <hr>
-                        <p class="fw-bold">Buku Uji</p>
-                        <hr>
-                        <p>Buku Uji Rp 35.000 x Volume Kendaraan</p>
-                        <hr>
-                         --}}
                         <div class="form-group">
-                            
+                            <label class="mb-2 mt-2">Total Buku Uji</label>
+                            <input type="number" onkeyup="return price()" placeholder="Total Buku Uji" class="form-control uji">
                         </div>
-                        <input type="text" placeholder="Grand Total "class="form-control grand-total">
-                      
+                        <div class="form-group">
+                            <label class="mb-2 mt-2">Grand Total</label>
+                        </div>
+                        <input type="text" disabled placeholder="Grand Total "class="form-control grand-total">
+                        <div class="bg-info text-white p-3 rounded-3 mt-3">Biaya Lainya Di Tambah Biaya Buku Uji + Biaya Registrasi Pendaftaran Baru</div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -137,40 +130,39 @@
         let satuanText1 = document.querySelector(".satuan-1");
         let volumeText1 = document.querySelector(".volume-1");
         let resultPrice1 = 0;
-      
+
         let satuanText2 = document.querySelector(".satuan-2");
         let volumeText2 = document.querySelector(".volume-2");
         let resultPrice2 = 0;
         
+        let VolumeUji = document.querySelector(".uji");
+
         let grandTotal = document.querySelector(".grand-total");
+        let sendData = null;
+
         satuanText1.addEventListener("keyup", function(e) {
             satuanText1.value = formatRupiah(this.value);
         })
         satuanText2.addEventListener("keyup", function(e) {
             satuanText2.value = formatRupiah(this.value);
         })
-        const price1 = () => {
-            const num1 = parseFloat(satuanText1.value.replace(/\./g, ''));
-            const num2 = parseFloat(volumeText1.value.replace(/\./g, ''));
-            resultPrice1 =  parseFloat(num2 * 150000);
-            if(num1 > 7000){
-                satuanText1.value = 0        
-                Toastify({
-                text: "Maaf anda dapat menginput di form ini dari 0 S/D 7.000 Kg",
-                duration: 3000,
-                close: true,
-                backgroundColor: "#D61355",
-                }).showToast();    
-            }else{
-                console.log(resultPrice1);
-            }
-        }
-        const price2 = () => 
+        const price = async () => 
         {
-            const num1 = parseFloat(satuanText2.value.replace(/\./g, ''));
-            const num2 = parseFloat(volumeText2.value.replace(/\./g, ''));
-            resultPrice2 =  parseFloat(num2 * 250000);
-            grandTotal.value = "Rp" + formatRupiah(resultPrice1 + resultPrice2);
+          
+            sendData = {
+                price1: {
+                    satuan: parseFloat(satuanText1.value.replace(/\./g, '')),
+                    volume: parseFloat(volumeText1.value.replace(/\./g, ''))
+                },
+                price2: {
+                    satuan: parseFloat(satuanText2.value.replace(/\./g, '')),
+                    volume: parseFloat(volumeText2.value.replace(/\./g, ''))
+                },
+                uji: parseFloat(VolumeUji.value)
+            }
+            const response = await axios.post("/api/transaksi", sendData);
+            const {temp1,temp2,final} = response.data;
+            grandTotal.value = `Rp ${formatRupiah(final)}`;
         }
 
 

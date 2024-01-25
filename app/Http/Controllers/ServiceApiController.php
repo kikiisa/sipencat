@@ -15,28 +15,35 @@ class ServiceApiController extends Controller
     }
     public function transaction(Request $request)
     {
-        $valid = Validator::make($request->all(), [
-            'satuan' => 'required',
-            'volume' => 'required|numeric'
-        ],[
-            'satuan.required' => 'Satuan harus diisi',
-            'volume.required' => 'Volume harus diisi',
-            'volume.numeric' => 'Volume harus berupa angka'
-        ]);
-        if($valid->fails())
-        {
-            return response()->json([
-                'message' => 'error',
-                'errors' => $valid->errors()
-            ],422);
-        }
+        
+        $regisKendaraanBaru = [
+            'jbb1' => 350000,
+            'jbb2' => 750000
+        ];
 
-      
-        echo json_encode([
-            'data' => [
-                'stauan' =>$this->transactionService->removeKoma($request->satuan),
-                'volume' => $request->volume
-            ],
+        $biayaUji = [
+            'jbb1' => 150000,
+            'jbb2' => 250000
+        ];
+
+
+        $satuan1 = $request->price1["satuan"];
+        $volume1 = $request->price1["volume"];
+        $total1 = ($volume1 * $biayaUji["jbb1"]);
+        $grandTotal1 = $total1 == 0 ? 0 : $total1 + $regisKendaraanBaru["jbb1"];
+
+        $satuan2 = $request->price2["satuan"];
+        $volume2 = $request->price2["volume"];
+        $total2 =  ($volume2 * $biayaUji["jbb2"]);
+        
+        $bukuUji = $request->uji * 35000;
+
+        $grandTotal2 = $total2 == 0 ? 0 : $total2 + $regisKendaraanBaru["jbb2"];
+        $finalTotal = $grandTotal1 + $grandTotal2;
+        return response()->json([
+            'temp1' => $grandTotal1,
+            'temp2' => $grandTotal2,
+            'final' => $bukuUji + $finalTotal, 
         ]);
     }
 }
