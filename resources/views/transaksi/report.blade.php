@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/main/app.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/css/main/app-dark.css') }}">
 </head>
+<style>
+    @media print {
+  @page {
+    size: landscape;
+  }
+}
 
+</style>
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -20,38 +27,22 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Transaksi</th>
-                            <th>Qty</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Tgl Transaksi</th>
-                            <th>Tgl Update Transaski</th>
-                           
+                            <th>B. Uji 7.000 < | B. Regis</th>
+                            <th>B. Uji 8.000 > | B. Regis </th>
+                            <th>B. Buku Uji</th>
+                            <th>Volume Kendaraan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data as $item)
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $item->name_transaksi }}</td>
-                                <td>{{ $item->qty }} {{ $item->satuan }}</td>
-                                <td> {{ 'Rp ' . number_format($item->price_uji + $item->price_regis, 0, ',', '.') }}
-                                </td>
-                                <td>
-                                    @if ($item->status == 'success')
-                                        <small class="badge bg-success"><strong>Berhasil</strong></small>
-                                    @elseif ($item->status == 'pending')
-                                        <small class="badge bg-warning"><strong>Pending</strong></small>
-                                    @else
-                                        <small class="badge bg-danger">
-                                            <strong>Dibatalkan</strong>
-                                        </small>
-                                    @endif
-                                </td>
-                                <td>{{ $item->created_at }}</td>
-                                <td>{{ $item->updated_at }}</td>
-                              
-                            </tr>
+                                <td>Rp {{number_format(($item->VolumeKendaraanBaru1) * 150000, 0, ',', '.') }} | Rp  {{number_format(($item->VolumeKendaraanBaru1) * 350000, 0, ',', '.')}}</td>
+                                <td>Rp {{number_format(($item->VolumeKendaraanBaru2) * 250000, 0, ',', '.') }} | Rp  {{number_format(($item->VolumeKendaraanBaru2) * 750000, 0, ',', '.')}}</td>
+                                <td>Rp {{number_format(($item->VolumeKendaraanBaru1 + $item->VolumeKendaraanBaru2) * 35000, 0, ',', '.') }}</td>
+                                <td>{{$item->VolumeKendaraanBaru1 + $item->VolumeKendaraanBaru2}}</td>
+                               
+                                
                         @endforeach
                     </tbody>
                 </table>

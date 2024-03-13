@@ -14,13 +14,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $payToday = Transaksi::whereDate('created_at', today())->sum('total');
+        // $payToday = Transaksi::whereDate('created_at', today())->sum('total');
         return view('dashboard.index',[
-            'payToday' => $payToday,
+            'payToday' => 0,
             
-            'pending' => Transaksi::all()->where('status','Pending')->count(),
-            'success' => Transaksi::all()->where('status','Success')->count(),
-            'failed' => Transaksi::all()->where('status','Failed')->count(),
+            'pending' => 0,
+            'success' => 0,
+            'failed' => 0,
         ]);
     }
 

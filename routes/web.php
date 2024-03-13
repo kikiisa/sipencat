@@ -28,6 +28,7 @@ Route::prefix('account')->group(function () {
         Route::resource('transaksi',TransaksiController::class);
         Route::resource('profile',ProfileController::class);
         Route::resource('master-user',MasterUserController::class);
+        Route::get('transaksi/cetak/{id}',[TransaksiController::class,'cetak'])->name('transaksi.cetak');
         
     });
 });

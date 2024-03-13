@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Service\ServiceTransaksi;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
-
 class TransaksiController extends Controller
-{
+{   
+    private $service;
+    public function __construct()
+    {
+        $this->service = new ServiceTransaksi();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -46,36 +51,11 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name_transaksi' => 'required',
-            'qty' => 'required|integer',
-            'satuan' => 'required',
-            'regis' => 'required',
-            'uji' => 'required',
-            'status' => 'required',
-        ],[
-            'name_transaksi.required' => 'Nama transaksi tidak boleh kosong',
-            'qty.required' => 'Qty tidak boleh kosong',
-            'qty.integer' => 'Qty harus berupa angka',
-            'satuan.required' => 'Satuan tidak boleh kosong',
-            'regis.required' => 'Harga registrasi tidak boleh kosong',
-            'uji.required' => 'Harga uji tidak boleh kosong',
-            'status.required' => 'Status tidak boleh kosong',
-        ]);
-        $data = Transaksi::create([
-            'uuid' => Uuid::uuid4()->toString(),
-            'name_transaksi' => $request->name_transaksi,
-            'qty' => $request->qty,
-            'satuan' => $request->satuan,
-            'price_regis' => $request->regis,
-            'price_uji' => $request->uji,
-            'status' => $request->status, 
-        ]);
-        if($data)
-        {
-            return redirect()->route('transaksi.index')->with('success','Data Berhasil');
+        if(ServiceTransaksi::insertTransaksi($request)){
+            return redirect()->back()->with("success","Berhasil");
         }else{
-            return redirect()->route('transaksi.index')->with('error','Data Gagal Disimpan');
+            return redirect()->back()->with("error","Gagal");
+            
         }
     }
 
@@ -87,7 +67,24 @@ class TransaksiController extends Controller
      */
     public function show($id)
     {
-        //
+        
+    }
+
+    public function cetak(Request $request,$id)
+    {
+        $data = Transaksi::all()->where("uuid",$id);
+        if($data->count() > 0)
+        {
+            
+            $terbilang = $this->service->terbilang($this->service->getTotal($data->first()));
+            return response()->view("transaksi.singleReport",[
+                'data' => $data->first(),
+                'terbilang' => $terbilang,
+            ]);
+        }else{
+            return redirect()->back()->with("error","Data Tidak Ditemukan");
+        }
+        
     }
 
     /**
@@ -111,32 +108,9 @@ class TransaksiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name_transaksi' => 'required',
-            'qty' => 'required|integer',
-            'satuan' => 'required',
-            'regis' => 'required',
-            'uji' => 'required',
-            'status' => 'required',
-        ],[
-            'name_transaksi.required' => 'Nama transaksi tidak boleh kosong',
-            'qty.required' => 'Qty tidak boleh kosong',
-            'qty.integer' => 'Qty harus berupa angka',
-            'satuan.required' => 'Satuan tidak boleh kosong',
-            'regis.required' => 'Harga registrasi tidak boleh kosong',
-            'uji.required' => 'Harga uji tidak boleh kosong',
-            'status.required' => 'Status tidak boleh kosong',
-        ]);
         $data = Transaksi::find($id);
-        $data->update([
-            'name_transaksi' => $request->name_transaksi,
-            'qty' => $request->qty,
-            'satuan' => $request->satuan,
-            'price_regis' => $request->regis,
-            'price_uji' => $request->uji,
-            'status' => $request->status, 
-        ]);   
-        if($data)
+         
+        if($this->service->updateTransaksi($request,$data))
         {
             return redirect()->route('transaksi.index')->with('success','Data Berhasil');
         }else{

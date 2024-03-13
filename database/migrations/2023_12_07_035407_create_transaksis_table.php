@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->string('satuan');
-            $table->string('volume kendaraan');
-            $table->string('total');
+            $table->string("satuan1");
+            $table->string("VolumeKendaraanBaru1");
+            $table->string("satuan2");
+            $table->string("VolumeKendaraanBaru2");
             $table->timestamps();
         });
     }
