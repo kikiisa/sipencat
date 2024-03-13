@@ -16,11 +16,7 @@ class DashboardController extends Controller
     {
         // $payToday = Transaksi::whereDate('created_at', today())->sum('total');
         return view('dashboard.index',[
-            'payToday' => 0,
-            
-            'pending' => 0,
-            'success' => 0,
-            'failed' => 0,
+            'payToday' => Transaksi::whereDate('created_at', today())->count(),
         ]);
     }
 

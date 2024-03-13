@@ -44,7 +44,66 @@
             </div>
         </div>
     </section>
-    <div class="modal fade text-left modal-borderless" id="add" tabindex="-1" role="dialog"
+    <div class="modal fade text-left" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel1">Tambah Pengguna</h5>
+                    <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                
+                    <div class="modal-body">
+                        <form action="{{ route('master-user.store') }}" method="post" enctype="multipart/form-data">
+                        
+                            @method('POST')
+                            @csrf
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="name">Nama Lengkap</label>
+                                    <input required type="text" name="name" placeholder="Nama Lengkap" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input required type="text" name="username" placeholder="Username" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input required type="email" name="email" placeholder="Email" class="form-control">
+                                </div>    
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select required name="status" id="status" class="form-control">
+                                    <option value="" selected disabled >-- Pilih Status --</option>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">NonaktifAktif</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" required name="password" id="password" placeholder="*******"  class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Konfirmasi Password</label>
+                                <input type="password" required name="confirm" id="confirm" placeholder="*******"  class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tambah Pengguna</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Close</span>
+                        </button>
+                    </div> 
+            </div>
+        </div>
+    </div>
+    {{-- <div class="modal fade text-left modal-borderless" id="add" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -100,7 +159,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
     <script src="{{ asset('template/assets/extensions/toastify-js/src/toastify.js') }}"></script>
     @if (count($errors) > 0)
         <script>
